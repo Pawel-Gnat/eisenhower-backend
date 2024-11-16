@@ -32,7 +32,7 @@ export const createTask = async (values: TaskType) => {
 	return task.validate().then(() => task.save())
 }
 export const deleteTaskById = (id: string, userId: string) =>
-	Task.find({ userId }).findOneAndDelete({ _id: id, runValidators: true })
+	Task.findOneAndDelete({ _id: id, userId }, { runValidators: true })
 export const updateTaskById = (userId: string, id: string, values: TaskType) =>
 	Task.find({ userId }).findOneAndUpdate({ _id: id }, values, {
 		new: true,
