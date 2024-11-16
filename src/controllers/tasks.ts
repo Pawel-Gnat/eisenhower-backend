@@ -68,9 +68,15 @@ export const deleteTask = async (req: express.Request, res: express.Response) =>
 		const userId = req.identity
 		const { id } = req.params
 
+		const existingTask = await getTaskById(id, userId)
+
+		if (!existingTask) {
+			return responseHelpers.sendRejectedResponse(404, 'Task not found', Status.WARNING)
+		}
+
 		await deleteTaskById(id, userId)
 
-		return responseHelpers.sendFulfilledResponseWithoutData(204, 'Client deleted', Status.SUCCESS)
+		return responseHelpers.sendFulfilledResponseWithoutData(204, 'Task deleted', Status.SUCCESS)
 	} catch (error) {
 		console.log(error)
 
