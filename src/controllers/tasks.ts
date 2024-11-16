@@ -76,7 +76,7 @@ export const deleteTask = async (req: express.Request, res: express.Response) =>
 
 		await deleteTaskById(id, userId)
 
-		return responseHelpers.sendFulfilledResponseWithoutData(204, 'Task deleted', Status.SUCCESS)
+		return responseHelpers.sendFulfilledResponseWithoutData(200, 'Task deleted', Status.SUCCESS)
 	} catch (error) {
 		console.log(error)
 
@@ -91,7 +91,7 @@ export const deleteAllTasks = async (req: express.Request, res: express.Response
 		const userId = req.identity
 		await deleteTasks(userId)
 
-		responseHelpers.sendFulfilledResponseWithoutData(204, 'Tasks deleted', Status.SUCCESS)
+		responseHelpers.sendFulfilledResponseWithoutData(200, 'Tasks deleted', Status.SUCCESS)
 	} catch (error) {
 		console.log(error)
 
