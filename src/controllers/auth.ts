@@ -48,7 +48,7 @@ export const loginUser = async (req: express.Request, res: express.Response) => 
 					token = generateAccessToken({ id: user.id })
 					await updateSession(token, user.id)
 
-					responseHelpers.sendFulfilledResponseWithCookie(token, 200, 'Login successful', Status.SUCCESS)
+					return responseHelpers.sendFulfilledResponseWithCookie(token, 200, 'Login successful', Status.SUCCESS)
 				} else {
 					console.error('Invalid token:', error)
 
