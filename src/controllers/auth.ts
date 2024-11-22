@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { createResponseHelpers, generateAccessToken, verifyToken } from '../helpers'
 
 import { getUserByEmail, createUser } from '../db/users'
-import { createSession, getSessionByUserId, updateSession } from '../db/sessions'
+import { createSession, getSessionByToken, getSessionByUserId, updateSession } from '../db/sessions'
 
 import { Status } from '../types'
 
@@ -62,6 +62,38 @@ export const loginUser = async (req: express.Request, res: express.Response) => 
 		console.log(error)
 		return responseHelpers.sendRejectedResponse(500, 'Internal server error', Status.DANGER)
 	}
+}
+
+export const validateUser = async (req: express.Request, res: express.Response) => {
+	const responseHelpers = createResponseHelpers(res)
+
+	const token = req.cookies['authorization']
+
+	if (!token) {
+		return responseHelpers.sendRejectedResponse(401, 'Token not present', Status.DANGER)
+	}
+
+	try {
+		verifyToken(token)
+	} catch (error: unknown) {
+		if (error instanceof jwt.TokenExpiredError) {
+			console.error(error)
+
+			return responseHelpers.sendRejectedResponse(401, 'Token expired', Status.DANGER)
+		} else {
+			console.error('Invalid token:', error)
+
+			return responseHelpers.sendRejectedResponse(401, 'Invalid token', Status.DANGER)
+		}
+	}
+
+	const session = await getSessionByToken(token)
+
+	if (!session) {
+		return responseHelpers.sendRejectedResponse(404, 'Session not found', Status.DANGER)
+	}
+
+	responseHelpers.sendFulfilledResponseWithoutData(200, 'Validated', Status.SUCCESS)
 }
 
 export const logoutUser = async (req: express.Request, res: express.Response) => {
