@@ -53,7 +53,7 @@ export const createNewTask = async (req: express.Request, res: express.Response)
 			userId,
 		})
 
-		responseHelpers.sendFulfilledResponseWithData(task, 200, 'Task created', Status.SUCCESS)
+		responseHelpers.sendFulfilledResponseWithData(task, 201, 'Task created', Status.SUCCESS)
 	} catch (error) {
 		console.log(error)
 
